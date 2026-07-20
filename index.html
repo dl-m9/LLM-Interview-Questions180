@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>大模型面试八股训练台 180</title>
+  <title>LLM180 大模型面试训练</title>
   <style>
     :root {
       --bg: #f5f7fb;
@@ -887,11 +887,40 @@
       white-space: nowrap;
     }
 
-    .slide-brand span {
-      color: #887c6d;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .slide-library-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 3px;
+      border: 1px solid rgba(126, 111, 92, 0.2);
+      border-radius: 7px;
+      background: rgba(255, 253, 248, 0.68);
+    }
+
+    .slide-library-switch button {
+      min-height: 28px;
+      padding: 4px 9px;
+      border: 0;
+      border-radius: 5px;
+      background: transparent;
+      color: #786f64;
+      font-size: 12px;
+      line-height: 1;
       white-space: nowrap;
+      box-shadow: none;
+    }
+
+    .slide-library-switch button.active {
+      background: #e9f0f6;
+      color: #244d73;
+      box-shadow: inset 0 0 0 1px rgba(36, 77, 115, 0.08);
+    }
+
+    .slide-library-switch small {
+      margin-left: 4px;
+      color: inherit;
+      font-size: 10px;
+      opacity: 0.7;
     }
 
     .slide-topic-nav {
@@ -1147,6 +1176,60 @@
       white-space: pre-line;
     }
 
+    .slide-code-section {
+      grid-column: 1 / -1;
+      min-width: 0;
+      padding-top: 4px;
+    }
+
+    .slide-code-meta {
+      margin: 0 0 8px;
+      color: #6d655b;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .slide-code {
+      margin: 0;
+      max-width: 100%;
+      overflow: auto;
+      padding: 16px 18px;
+      border: 1px solid #ddd6cb;
+      border-radius: 6px;
+      background: #f6f4ef;
+      color: #25211c;
+      font-family: "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.58;
+      tab-size: 4;
+      white-space: pre;
+    }
+
+    .slide-code code {
+      font: inherit;
+    }
+
+    .syntax-keyword { color: #245b8d; font-weight: 650; }
+    .syntax-string { color: #557744; }
+    .syntax-comment { color: #8b8378; font-style: italic; }
+    .syntax-number { color: #9a5b25; }
+    .syntax-builtin { color: #75558b; }
+    .syntax-decorator { color: #9a493f; }
+
+    .slide-code-placeholder {
+      padding: 22px;
+      border: 1px dashed #cfc4b4;
+      border-radius: 6px;
+      background: #f8f5ef;
+      color: #776d61;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
     .slide-recall {
       grid-column: 1 / -1;
       padding-top: 2px;
@@ -1314,6 +1397,10 @@
         gap: 8px;
       }
 
+      .slide-brand {
+        justify-content: space-between;
+      }
+
       .slide-topic-nav {
         max-width: none;
         order: 2;
@@ -1409,8 +1496,11 @@
     <section class="slide-deck" aria-label="大模型面试题幻灯片">
       <nav class="slide-navbar" aria-label="训练导航">
         <div class="slide-brand">
-          <strong>大模型面试八股训练</strong>
-          <span>后训练 · Agentic RL · 推理系统</span>
+          <strong>LLM180</strong>
+          <div class="slide-library-switch" role="tablist" aria-label="题库类型">
+            <button id="libraryTheory" class="active" role="tab" aria-selected="true">八股训练<small>180</small></button>
+            <button id="libraryCoding" role="tab" aria-selected="false">手撕代码<small>40</small></button>
+          </div>
         </div>
         <div id="slideTopicNav" class="slide-topic-nav" aria-label="题目主题"></div>
         <div id="slideProgressCompact" class="slide-counter">
@@ -1450,9 +1540,10 @@
       <div class="slide-footer">
         <div class="slide-progress" aria-hidden="true"><div id="slideProgressFill" class="slide-progress-fill"></div></div>
         <div class="slide-footer-row">
-          <span class="slide-hint">← / → 切换题目，1 不会，2 模糊，3 掌握，B 错题</span>
+          <span id="slideHint" class="slide-hint">← / → 切换题目，1 不会，2 模糊，3 掌握，B 错题</span>
           <div class="slide-controls" aria-label="学习操作">
             <button id="slidePrevBottom">上一题</button>
+            <button id="slideToggleCode" class="is-hidden">显示代码</button>
             <button id="slideMarkBad">不会</button>
             <button id="slideMarkMid">标记模糊</button>
             <button id="slideMarkGood" class="primary-action">已掌握</button>
@@ -1468,7 +1559,7 @@
       <div class="topline">
         <div>
           <h1>大模型面试八股训练台</h1>
-          <p class="subtitle">180 道精练题，面向人才计划实习的大模型后训练、Agentic RL、RAG/工具调用、自进化和推理系统。题库结合已整理的 88 条面经与公开技术资料，答案优先训练 60 到 90 秒口述。</p>
+          <p class="subtitle">八股训练与手撕代码分为两套独立题库：180 道大模型核心题，40 道带参考实现的 Coding 题。面向人才计划实习的后训练、Agentic RL、RAG、推理系统和工程面试。</p>
         </div>
         <div class="toolbar">
           <button id="exportBtn" class="ghost">导出进度</button>
@@ -1622,6 +1713,19 @@
         type: "面经报告", confidence: "高", title: "已整理的 88 条人才计划面经报告",
         urls: [{ label: "本地面经报告", url: "talent_plan_internship_interview_50_report.html" }],
         checks: ["面经只用于校准问法和流程，不作为算法事实来源。", "项目答辩题要落到问题定义、实验设计、成本、失败案例和业务验收。"]
+      },
+      xhsCoding: {
+        type: "面经报告", confidence: "中", title: "小红书大模型岗位手撕代码面经",
+        urls: [
+          { label: "LLM 手撕汇总", url: "https://www.xiaohongshu.com/explore/69fdf4cf000000001a037922" },
+          { label: "人才计划 Code 篇", url: "https://www.xiaohongshu.com/explore/6852e76c0000000013012c02" },
+          { label: "腾讯 WXG 面经", url: "https://www.xiaohongshu.com/explore/69e9c830000000001b02386d" },
+          { label: "字节大模型面经", url: "https://www.xiaohongshu.com/explore/69384734000000001e022ec0" },
+          { label: "小米 AI Lab 面经", url: "https://www.xiaohongshu.com/explore/69d5ac2e000000001a03126e" },
+          { label: "蚂蚁大模型面经", url: "https://www.xiaohongshu.com/explore/68085500000000001c030f84" },
+          { label: "DeepSeek 实习面经", url: "https://www.xiaohongshu.com/explore/6a0033e7000000000803e9cf" }
+        ],
+        checks: ["公开面经用于确认题型是否出现，不代表公司固定题库。", "算法实现应先讲输入输出、状态或张量形状，再写代码并说明复杂度。", "代码答案是面试教学版本，生产实现还需覆盖批处理、数值稳定、设备、精度、异常和性能测试。"]
       },
       web: {
         type: "网上八股", confidence: "中", title: "公开八股检索用于发现问法",
@@ -1823,15 +1927,837 @@
       }
     };
 
+    const CODE_ANSWERS = {
+      "MHA numpy": {
+        language: "python",
+        complexity: "时间 O(BHT²d)，attention score 的空间 O(BHT²)。",
+        code: String.raw`import numpy as np
+
+def softmax(x, axis=-1):
+    x = x - np.max(x, axis=axis, keepdims=True)
+    exp_x = np.exp(x)
+    return exp_x / np.sum(exp_x, axis=axis, keepdims=True)
+
+def multi_head_attention(x, wq, wk, wv, wo, num_heads,
+                         padding_mask=None, causal=False):
+    # x: [B, T, D], padding_mask: [B, T], True 表示有效 token
+    batch, seq_len, hidden = x.shape
+    assert hidden % num_heads == 0
+    head_dim = hidden // num_heads
+
+    def split_heads(y):
+        y = y.reshape(batch, seq_len, num_heads, head_dim)
+        return y.transpose(0, 2, 1, 3)  # [B, H, T, d]
+
+    q = split_heads(x @ wq)
+    k = split_heads(x @ wk)
+    v = split_heads(x @ wv)
+    scores = q @ k.swapaxes(-1, -2) / np.sqrt(head_dim)
+
+    if causal:
+        future = np.triu(np.ones((seq_len, seq_len), dtype=bool), k=1)
+        scores = np.where(future[None, None], -np.inf, scores)
+    if padding_mask is not None:
+        scores = np.where(padding_mask[:, None, None, :], scores, -np.inf)
+
+    probs = softmax(scores, axis=-1)
+    context = probs @ v
+    context = context.transpose(0, 2, 1, 3).reshape(batch, seq_len, hidden)
+    return context @ wo`
+      },
+      "Top-p sampling": {
+        language: "python",
+        complexity: "排序主导时间 O(V log V)，额外空间 O(V)。",
+        code: String.raw`import torch
+
+def top_p_sample(logits, top_p=0.9, temperature=1.0, generator=None):
+    # logits: [..., vocab_size]
+    if temperature <= 0:
+        raise ValueError("temperature must be positive")
+    if not 0 < top_p <= 1:
+        raise ValueError("top_p must be in (0, 1]")
+
+    probs = torch.softmax(logits / temperature, dim=-1)
+    sorted_probs, sorted_ids = torch.sort(probs, descending=True, dim=-1)
+    cumulative = torch.cumsum(sorted_probs, dim=-1)
+
+    # 右移一位，保证跨过阈值的第一个 token 仍被保留
+    remove = cumulative > top_p
+    remove[..., 1:] = remove[..., :-1].clone()
+    remove[..., 0] = False
+    sorted_probs = sorted_probs.masked_fill(remove, 0.0)
+    sorted_probs = sorted_probs / sorted_probs.sum(dim=-1, keepdim=True)
+
+    sampled_rank = torch.multinomial(
+        sorted_probs, num_samples=1, generator=generator
+    )
+    token_id = sorted_ids.gather(-1, sampled_rank)
+    token_prob = sorted_probs.gather(-1, sampled_rank)
+    return token_id, token_prob.clamp_min(1e-20).log()`
+      },
+      "GRPO trainer skeleton": {
+        language: "python",
+        complexity: "loss 计算为 O(BGT)，真正成本主要来自 G 条 rollout 的生成。",
+        code: String.raw`import torch
+
+def grpo_loss(new_logp, old_logp, rewards, token_mask,
+              ref_logp=None, clip_eps=0.2, beta=0.0, eps=1e-6):
+    # logp/mask: [B, G, T], rewards: [B, G]
+    mean = rewards.mean(dim=1, keepdim=True)
+    std = rewards.std(dim=1, keepdim=True, unbiased=False)
+    advantages = ((rewards - mean) / (std + eps)).detach()
+
+    ratio = torch.exp(new_logp - old_logp)
+    token_adv = advantages.unsqueeze(-1)
+    surrogate_1 = ratio * token_adv
+    surrogate_2 = ratio.clamp(1 - clip_eps, 1 + clip_eps) * token_adv
+    policy_loss = -torch.minimum(surrogate_1, surrogate_2)
+
+    if ref_logp is not None and beta > 0:
+        # k3 estimator: exp(log pi_ref - log pi) - delta - 1
+        delta = ref_logp - new_logp
+        policy_loss = policy_loss + beta * (torch.exp(delta) - delta - 1)
+
+    loss = (policy_loss * token_mask).sum() / token_mask.sum().clamp_min(1)
+    stats = {"reward": rewards.mean().item(),
+             "group_std": std.mean().item()}
+    return loss, stats`
+      },
+      "Sampler": {
+        language: "python",
+        complexity: "top-k 为 O(V log k)，启用 top-p 时通常需要 O(V log V) 排序。",
+        code: String.raw`import torch
+
+def sample_token(logits, temperature=1.0, top_k=None, top_p=None,
+                 forbidden_ids=None, seed=0):
+    if temperature <= 0:
+        raise ValueError("temperature must be positive")
+    scores = logits.float() / temperature
+
+    if forbidden_ids:
+        scores[..., forbidden_ids] = -torch.inf
+    if top_k is not None:
+        k = min(top_k, scores.size(-1))
+        threshold = torch.topk(scores, k, dim=-1).values[..., -1, None]
+        scores = scores.masked_fill(scores < threshold, -torch.inf)
+    if top_p is not None:
+        sorted_scores, sorted_ids = torch.sort(scores, descending=True, dim=-1)
+        sorted_probs = torch.softmax(sorted_scores, dim=-1)
+        remove = torch.cumsum(sorted_probs, dim=-1) > top_p
+        remove[..., 1:] = remove[..., :-1].clone()
+        remove[..., 0] = False
+        sorted_scores = sorted_scores.masked_fill(remove, -torch.inf)
+        scores = torch.full_like(scores, -torch.inf).scatter(
+            -1, sorted_ids, sorted_scores
+        )
+
+    log_probs = torch.log_softmax(scores, dim=-1)
+    generator = torch.Generator(device=logits.device).manual_seed(seed)
+    token = torch.multinomial(log_probs.exp(), 1, generator=generator)
+    return token, log_probs.gather(-1, token)`
+      },
+      "DP grid": {
+        language: "python",
+        complexity: "时间 O(mn)，滚动数组空间 O(n)。",
+        code: String.raw`def unique_paths(m, n):
+    if m <= 0 or n <= 0:
+        return 0
+    dp = [1] * n
+    for _ in range(1, m):
+        for col in range(1, n):
+            dp[col] += dp[col - 1]
+    return dp[-1]`
+      },
+      "PPO loss": {
+        language: "python",
+        complexity: "对所有有效 token 线性扫描，时间和额外空间均为 O(N)。",
+        code: String.raw`import torch
+
+def masked_mean(x, mask):
+    return (x * mask).sum() / mask.sum().clamp_min(1)
+
+def ppo_loss(new_logp, old_logp, advantages, values, old_values,
+             returns, mask, entropy=None, clip_eps=0.2,
+             value_clip=0.2, value_coef=0.5, entropy_coef=0.0):
+    ratio = torch.exp(new_logp - old_logp)
+    policy_1 = ratio * advantages
+    policy_2 = ratio.clamp(1 - clip_eps, 1 + clip_eps) * advantages
+    policy_loss = -masked_mean(torch.minimum(policy_1, policy_2), mask)
+
+    clipped_values = old_values + (values - old_values).clamp(
+        -value_clip, value_clip
+    )
+    value_error = (values - returns.detach()).pow(2)
+    clipped_error = (clipped_values - returns.detach()).pow(2)
+    value_loss = 0.5 * masked_mean(torch.maximum(value_error, clipped_error), mask)
+
+    entropy_bonus = 0.0 if entropy is None else masked_mean(entropy, mask)
+    total = policy_loss + value_coef * value_loss - entropy_coef * entropy_bonus
+    return total, {"policy_loss": policy_loss.detach(),
+                   "value_loss": value_loss.detach(),
+                   "entropy": entropy_bonus}`
+      },
+      "GAE": {
+        language: "python",
+        complexity: "时间 O(T)，额外空间 O(T)。",
+        code: String.raw`import torch
+
+def generalized_advantage_estimation(rewards, values, dones,
+                                     gamma=0.99, lam=0.95):
+    # rewards/dones: [T], values: [T + 1]
+    advantages = torch.zeros_like(rewards)
+    gae = torch.zeros((), dtype=rewards.dtype, device=rewards.device)
+
+    for t in reversed(range(rewards.size(0))):
+        nonterminal = 1.0 - dones[t].float()
+        delta = rewards[t] + gamma * values[t + 1] * nonterminal - values[t]
+        gae = delta + gamma * lam * nonterminal * gae
+        advantages[t] = gae
+
+    returns = advantages + values[:-1]
+    return advantages.detach(), returns.detach()`
+      },
+      "DPO loss": {
+        language: "python",
+        complexity: "已获得四组序列 logprob 后，loss 计算为 O(B)。",
+        code: String.raw`import torch.nn.functional as F
+
+def dpo_loss(policy_chosen_logp, policy_rejected_logp,
+             ref_chosen_logp, ref_rejected_logp, beta=0.1):
+    # 输入应是每条 response 有效 token logprob 的求和
+    policy_margin = policy_chosen_logp - policy_rejected_logp
+    reference_margin = ref_chosen_logp - ref_rejected_logp
+    logits = beta * (policy_margin - reference_margin)
+    loss = -F.logsigmoid(logits).mean()
+    chosen_reward = beta * (policy_chosen_logp - ref_chosen_logp).detach()
+    rejected_reward = beta * (policy_rejected_logp - ref_rejected_logp).detach()
+    return loss, chosen_reward, rejected_reward`
+      },
+      "Softmax and cross entropy": {
+        language: "python",
+        complexity: "时间 O(BC)，若不显式保存 softmax 可只保留 O(B) 额外空间。",
+        code: String.raw`import torch
+
+def stable_softmax(logits, dim=-1):
+    shifted = logits - logits.max(dim=dim, keepdim=True).values
+    exp_logits = shifted.exp()
+    return exp_logits / exp_logits.sum(dim=dim, keepdim=True)
+
+def cross_entropy_from_logits(logits, targets):
+    # logits: [B, C], targets: [B]
+    log_normalizer = torch.logsumexp(logits, dim=-1)
+    target_logits = logits.gather(1, targets[:, None]).squeeze(1)
+    return (log_normalizer - target_logits).mean()`
+      },
+      "MSE and KL": {
+        language: "python",
+        complexity: "时间 O(N)，额外空间取决于是否保留完整概率分布。",
+        code: String.raw`import torch
+
+def mse_loss(prediction, target):
+    return (prediction - target).pow(2).mean()
+
+def categorical_kl(p_logits, q_logits):
+    # KL(P || Q)，最后一维表示类别或词表
+    log_p = torch.log_softmax(p_logits, dim=-1)
+    log_q = torch.log_softmax(q_logits, dim=-1)
+    p = log_p.exp()
+    return (p * (log_p - log_q)).sum(dim=-1).mean()`
+      },
+      "AdamW": {
+        language: "python",
+        complexity: "每一步时间和状态空间均为 O(P)，P 为参数量。",
+        code: String.raw`import torch
+
+@torch.no_grad()
+def adamw_step(param, grad, exp_avg, exp_avg_sq, step, lr=1e-3,
+               betas=(0.9, 0.999), eps=1e-8, weight_decay=0.01):
+    beta1, beta2 = betas
+    exp_avg.mul_(beta1).add_(grad, alpha=1 - beta1)
+    exp_avg_sq.mul_(beta2).addcmul_(grad, grad, value=1 - beta2)
+
+    bias_correction1 = 1 - beta1 ** step
+    bias_correction2 = 1 - beta2 ** step
+    corrected_m = exp_avg / bias_correction1
+    corrected_v = exp_avg_sq / bias_correction2
+
+    # AdamW 的 weight decay 与梯度更新解耦
+    param.mul_(1 - lr * weight_decay)
+    param.addcdiv_(corrected_m, corrected_v.sqrt().add(eps), value=-lr)`
+      },
+      "RoPE": {
+        language: "python",
+        complexity: "时间 O(BHTd)，只需 O(Td) 的 cos/sin 缓存。",
+        code: String.raw`import torch
+
+def rotate_half(x):
+    even = x[..., 0::2]
+    odd = x[..., 1::2]
+    return torch.stack((-odd, even), dim=-1).flatten(-2)
+
+def apply_rope(q, k, position_ids, base=10000.0):
+    # q/k: [B, H, T, D]，D 必须为偶数
+    dim = q.size(-1)
+    inv_freq = 1.0 / (base ** (
+        torch.arange(0, dim, 2, device=q.device, dtype=q.dtype) / dim
+    ))
+    angles = position_ids.to(q.dtype)[..., None] * inv_freq  # [B, T, D/2]
+    cos = angles.cos().repeat_interleave(2, dim=-1)[:, None]
+    sin = angles.sin().repeat_interleave(2, dim=-1)[:, None]
+    return q * cos + rotate_half(q) * sin, k * cos + rotate_half(k) * sin`
+      },
+      "RMSNorm": {
+        language: "python",
+        complexity: "时间 O(ND)，参数量 O(D)，不需要均值中心化。",
+        code: String.raw`import torch
+from torch import nn
+
+class RMSNorm(nn.Module):
+    def __init__(self, hidden_size, eps=1e-6):
+        super().__init__()
+        self.weight = nn.Parameter(torch.ones(hidden_size))
+        self.eps = eps
+
+    def forward(self, x):
+        input_dtype = x.dtype
+        x_float = x.float()
+        rms_inv = torch.rsqrt(x_float.pow(2).mean(dim=-1, keepdim=True) + self.eps)
+        normalized = x_float * rms_inv
+        return (normalized * self.weight.float()).to(input_dtype)`
+      },
+      "Transformer block": {
+        language: "python",
+        complexity: "self-attention 时间 O(BT²D)，MLP 时间 O(BTDd_ff)。",
+        code: String.raw`import torch
+from torch import nn
+import torch.nn.functional as F
+
+class SwiGLU(nn.Module):
+    def __init__(self, hidden, intermediate):
+        super().__init__()
+        self.gate = nn.Linear(hidden, intermediate, bias=False)
+        self.up = nn.Linear(hidden, intermediate, bias=False)
+        self.down = nn.Linear(intermediate, hidden, bias=False)
+
+    def forward(self, x):
+        return self.down(F.silu(self.gate(x)) * self.up(x))
+
+class TransformerBlock(nn.Module):
+    def __init__(self, hidden, heads, intermediate):
+        super().__init__()
+        self.attn_norm = RMSNorm(hidden)
+        self.ffn_norm = RMSNorm(hidden)
+        self.attn = nn.MultiheadAttention(hidden, heads, batch_first=True)
+        self.mlp = SwiGLU(hidden, intermediate)
+
+    def forward(self, x):
+        seq_len = x.size(1)
+        causal_mask = torch.triu(
+            torch.ones(seq_len, seq_len, dtype=torch.bool, device=x.device), 1
+        )
+        h = self.attn_norm(x)
+        attn_out, _ = self.attn(h, h, h, attn_mask=causal_mask,
+                                need_weights=False)
+        x = x + attn_out
+        return x + self.mlp(self.ffn_norm(x))`
+      },
+      "KV cache attention": {
+        language: "python",
+        complexity: "单步 decode 时间 O(BHTd)，cache 空间随序列长度线性增长。",
+        code: String.raw`import math
+import torch
+
+def decode_attention(q, k_new, v_new, k_cache=None, v_cache=None):
+    # q/k_new/v_new: [B, H, 1, D]，假设已完成投影和 RoPE
+    if k_cache is None:
+        k_all, v_all = k_new, v_new
+    else:
+        k_all = torch.cat([k_cache, k_new], dim=2)
+        v_all = torch.cat([v_cache, v_new], dim=2)
+
+    scores = q @ k_all.transpose(-1, -2) / math.sqrt(q.size(-1))
+    probs = torch.softmax(scores.float(), dim=-1).to(q.dtype)
+    output = probs @ v_all
+    return output, k_all.detach(), v_all.detach()`
+      },
+      "FlashAttention online softmax": {
+        language: "python",
+        complexity: "数学 FLOPs 仍为 O(T²d)，但分块后避免保存完整 T×T score 矩阵。",
+        code: String.raw`import math
+import torch
+
+def tiled_attention(q, k, v, block_size=64):
+    # 教学版单头、无 mask 实现，展示 online softmax，不是高性能 kernel
+    seq_len, dim = q.shape
+    output = torch.empty_like(q)
+
+    for q_start in range(0, seq_len, block_size):
+        q_block = q[q_start:q_start + block_size]
+        rows = q_block.size(0)
+        row_max = torch.full((rows,), -torch.inf, device=q.device)
+        row_sum = torch.zeros(rows, device=q.device)
+        accumulator = torch.zeros((rows, dim), device=q.device, dtype=q.dtype)
+
+        for k_start in range(0, seq_len, block_size):
+            k_block = k[k_start:k_start + block_size]
+            v_block = v[k_start:k_start + block_size]
+            scores = q_block @ k_block.T / math.sqrt(dim)
+            new_max = torch.maximum(row_max, scores.max(dim=1).values)
+            old_scale = torch.exp(row_max - new_max)
+            block_exp = torch.exp(scores - new_max[:, None])
+            row_sum = row_sum * old_scale + block_exp.sum(dim=1)
+            accumulator = accumulator * old_scale[:, None] + block_exp @ v_block
+            row_max = new_max
+
+        output[q_start:q_start + rows] = accumulator / row_sum[:, None]
+    return output`
+      },
+      "Importance sampling": {
+        language: "python",
+        complexity: "token ratio 为 O(BT)，sequence ratio 还需要沿序列求和。",
+        code: String.raw`import torch
+
+def importance_ratios(new_logp, behavior_logp, mask, clip_log_ratio=20.0):
+    # new_logp/behavior_logp/mask: [B, T]
+    token_log_ratio = (new_logp - behavior_logp) * mask
+    token_ratio = torch.exp(token_log_ratio.clamp(-clip_log_ratio, clip_log_ratio))
+
+    sequence_log_ratio = token_log_ratio.sum(dim=-1)
+    sequence_ratio = torch.exp(
+        sequence_log_ratio.clamp(-clip_log_ratio, clip_log_ratio)
+    )
+    return token_ratio, sequence_ratio`
+      },
+      "Kth largest": {
+        language: "python",
+        complexity: "Quickselect 平均时间 O(n)，最坏 O(n²)，原地额外空间 O(1)。",
+        code: String.raw`def find_kth_largest(nums, k):
+    if not 1 <= k <= len(nums):
+        raise ValueError("k out of range")
+    nums = list(nums)
+    target = len(nums) - k
+    left, right = 0, len(nums) - 1
+
+    while left <= right:
+        pivot = nums[right]
+        store = left
+        for i in range(left, right):
+            if nums[i] <= pivot:
+                nums[store], nums[i] = nums[i], nums[store]
+                store += 1
+        nums[store], nums[right] = nums[right], nums[store]
+
+        if store == target:
+            return nums[store]
+        if store < target:
+            left = store + 1
+        else:
+            right = store - 1`
+      },
+      "Longest substring": {
+        language: "python",
+        complexity: "时间 O(n)，哈希表空间 O(min(n, 字符集大小))。",
+        code: String.raw`def length_of_longest_substring(text):
+    last_seen = {}
+    left = 0
+    best = 0
+    for right, char in enumerate(text):
+        if char in last_seen and last_seen[char] >= left:
+            left = last_seen[char] + 1
+        last_seen[char] = right
+        best = max(best, right - left + 1)
+    return best`
+      },
+      "Valid parentheses": {
+        language: "python",
+        complexity: "时间 O(n)，栈空间 O(n)。",
+        code: String.raw`def longest_valid_parentheses(text):
+    stack = [-1]
+    best = 0
+    for index, char in enumerate(text):
+        if char == "(":
+            stack.append(index)
+        else:
+            stack.pop()
+            if not stack:
+                stack.append(index)
+            else:
+                best = max(best, index - stack[-1])
+    return best`
+      },
+      "Rotated array": {
+        language: "python",
+        complexity: "无重复元素时，时间 O(log n)，空间 O(1)。",
+        code: String.raw`def search_rotated(nums, target):
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return mid
+
+        if nums[left] <= nums[mid]:
+            if nums[left] <= target < nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        else:
+            if nums[mid] < target <= nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+    return -1`
+      },
+      "Three sum": {
+        language: "python",
+        complexity: "排序后时间 O(n²)，忽略输出时额外空间 O(1)。",
+        code: String.raw`def three_sum(nums):
+    nums.sort()
+    result = []
+    for i in range(len(nums) - 2):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+        if nums[i] > 0:
+            break
+        left, right = i + 1, len(nums) - 1
+        while left < right:
+            total = nums[i] + nums[left] + nums[right]
+            if total == 0:
+                result.append([nums[i], nums[left], nums[right]])
+                left += 1
+                right -= 1
+                while left < right and nums[left] == nums[left - 1]:
+                    left += 1
+                while left < right and nums[right] == nums[right + 1]:
+                    right -= 1
+            elif total < 0:
+                left += 1
+            else:
+                right -= 1
+    return result`
+      },
+      "Trapping rain water": {
+        language: "python",
+        complexity: "时间 O(n)，额外空间 O(1)。",
+        code: String.raw`def trap(height):
+    left, right = 0, len(height) - 1
+    left_max = right_max = 0
+    water = 0
+    while left < right:
+        if height[left] <= height[right]:
+            left_max = max(left_max, height[left])
+            water += left_max - height[left]
+            left += 1
+        else:
+            right_max = max(right_max, height[right])
+            water += right_max - height[right]
+            right -= 1
+    return water`
+      },
+      "Reverse linked list": {
+        language: "python",
+        complexity: "时间 O(n)，迭代版本额外空间 O(1)。",
+        code: String.raw`class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def reverse_list(head):
+    previous = None
+    current = head
+    while current is not None:
+        next_node = current.next
+        current.next = previous
+        previous = current
+        current = next_node
+    return previous`
+      },
+      "Reverse k-group": {
+        language: "python",
+        complexity: "时间 O(n)，额外空间 O(1)。",
+        code: String.raw`def reverse_k_group(head, k):
+    dummy = ListNode(0, head)
+    group_prev = dummy
+
+    while True:
+        kth = group_prev
+        for _ in range(k):
+            kth = kth.next
+            if kth is None:
+                return dummy.next
+        group_next = kth.next
+
+        previous, current = group_next, group_prev.next
+        while current is not group_next:
+            next_node = current.next
+            current.next = previous
+            previous = current
+            current = next_node
+
+        old_start = group_prev.next
+        group_prev.next = kth
+        group_prev = old_start`
+      },
+      "Merge k lists": {
+        language: "python",
+        complexity: "N 个节点、k 条链表时，时间 O(N log k)，堆空间 O(k)。",
+        code: String.raw`import heapq
+import itertools
+
+def merge_k_lists(lists):
+    heap = []
+    counter = itertools.count()
+    for node in lists:
+        if node is not None:
+            heapq.heappush(heap, (node.val, next(counter), node))
+
+    dummy = tail = ListNode()
+    while heap:
+        _, _, node = heapq.heappop(heap)
+        tail.next = node
+        tail = node
+        if node.next is not None:
+            heapq.heappush(heap, (node.next.val, next(counter), node.next))
+    return dummy.next`
+      },
+      "Linked-list intersection": {
+        language: "python",
+        complexity: "时间 O(m+n)，额外空间 O(1)。",
+        code: String.raw`def get_intersection_node(head_a, head_b):
+    pointer_a, pointer_b = head_a, head_b
+    while pointer_a is not pointer_b:
+        pointer_a = head_b if pointer_a is None else pointer_a.next
+        pointer_b = head_a if pointer_b is None else pointer_b.next
+    return pointer_a`
+      },
+      "Edit distance": {
+        language: "python",
+        complexity: "时间 O(mn)，滚动数组空间 O(n)。",
+        code: String.raw`def edit_distance(source, target):
+    previous = list(range(len(target) + 1))
+    for i, source_char in enumerate(source, start=1):
+        current = [i]
+        for j, target_char in enumerate(target, start=1):
+            if source_char == target_char:
+                current.append(previous[j - 1])
+            else:
+                current.append(1 + min(previous[j], current[j - 1],
+                                       previous[j - 1]))
+        previous = current
+    return previous[-1]`
+      },
+      "Longest common subsequence": {
+        language: "python",
+        complexity: "时间 O(mn)，滚动数组空间 O(n)。",
+        code: String.raw`def longest_common_subsequence(a, b):
+    previous = [0] * (len(b) + 1)
+    for char_a in a:
+        current = [0]
+        for j, char_b in enumerate(b, start=1):
+            if char_a == char_b:
+                current.append(previous[j - 1] + 1)
+            else:
+                current.append(max(previous[j], current[j - 1]))
+        previous = current
+    return previous[-1]`
+      },
+      "Longest increasing subsequence": {
+        language: "python",
+        complexity: "时间 O(n log n)，tails 空间 O(n)。",
+        code: String.raw`from bisect import bisect_left
+
+def length_of_lis(nums):
+    tails = []
+    for number in nums:
+        index = bisect_left(tails, number)
+        if index == len(tails):
+            tails.append(number)
+        else:
+            tails[index] = number
+    return len(tails)`
+      },
+      "Stock profit": {
+        language: "python",
+        complexity: "时间 O(n)，额外空间 O(1)。",
+        code: String.raw`def max_profit(prices):
+    minimum = float("inf")
+    best = 0
+    for price in prices:
+        minimum = min(minimum, price)
+        best = max(best, price - minimum)
+    return best`
+      },
+      "House robber": {
+        language: "python",
+        complexity: "时间 O(n)，额外空间 O(1)。",
+        code: String.raw`def rob(nums):
+    skip_previous = 0
+    best_until_previous = 0
+    for value in nums:
+        new_best = max(best_until_previous, skip_previous + value)
+        skip_previous, best_until_previous = best_until_previous, new_best
+    return best_until_previous`
+      },
+      "Level-order traversal": {
+        language: "python",
+        complexity: "时间 O(n)，队列空间最坏 O(n)。",
+        code: String.raw`from collections import deque
+
+def level_order(root):
+    if root is None:
+        return []
+    queue = deque([root])
+    levels = []
+    while queue:
+        level = []
+        for _ in range(len(queue)):
+            node = queue.popleft()
+            level.append(node.val)
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        levels.append(level)
+    return levels`
+      },
+      "Validate BST": {
+        language: "python",
+        complexity: "时间 O(n)，递归栈平均 O(h)，最坏 O(n)。",
+        code: String.raw`def is_valid_bst(root):
+    def check(node, lower, upper):
+        if node is None:
+            return True
+        if not lower < node.val < upper:
+            return False
+        return (check(node.left, lower, node.val) and
+                check(node.right, node.val, upper))
+
+    return check(root, float("-inf"), float("inf"))`
+      },
+      "Binary-tree max path": {
+        language: "python",
+        complexity: "时间 O(n)，递归栈空间 O(h)。",
+        code: String.raw`def max_path_sum(root):
+    best = float("-inf")
+
+    def gain(node):
+        nonlocal best
+        if node is None:
+            return 0
+        left_gain = max(gain(node.left), 0)
+        right_gain = max(gain(node.right), 0)
+        best = max(best, node.val + left_gain + right_gain)
+        return node.val + max(left_gain, right_gain)
+
+    gain(root)
+    return best`
+      },
+      "Max island area": {
+        language: "python",
+        complexity: "时间 O(mn)，显式栈最坏 O(mn)，实现会原地修改 grid。",
+        code: String.raw`def max_area_of_island(grid):
+    rows, cols = len(grid), len(grid[0])
+    best = 0
+    for row in range(rows):
+        for col in range(cols):
+            if grid[row][col] != 1:
+                continue
+            grid[row][col] = 0
+            stack = [(row, col)]
+            area = 0
+            while stack:
+                r, c = stack.pop()
+                area += 1
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:
+                        grid[nr][nc] = 0
+                        stack.append((nr, nc))
+            best = max(best, area)
+    return best`
+      },
+      "Sliding-window maximum": {
+        language: "python",
+        complexity: "每个元素最多入队出队一次，时间 O(n)，队列空间 O(k)。",
+        code: String.raw`from collections import deque
+
+def max_sliding_window(nums, k):
+    queue = deque()  # 保存下标，对应值单调递减
+    result = []
+    for right, value in enumerate(nums):
+        while queue and queue[0] <= right - k:
+            queue.popleft()
+        while queue and nums[queue[-1]] <= value:
+            queue.pop()
+        queue.append(right)
+        if right >= k - 1:
+            result.append(nums[queue[0]])
+    return result`
+      },
+      "SQL aggregation": {
+        language: "sql",
+        complexity: "合理索引下主要扫描目标时间范围，按 company 分组。",
+        code: String.raw`-- 表 interviews(candidate_id, company, result, created_at)
+-- 统计近 30 天各公司的面试人数、通过人数和通过率
+SELECT
+    company,
+    COUNT(DISTINCT candidate_id) AS candidate_count,
+    COUNT(DISTINCT CASE WHEN result = 'pass' THEN candidate_id END) AS passed,
+    ROUND(
+        1.0 * COUNT(DISTINCT CASE WHEN result = 'pass' THEN candidate_id END)
+        / NULLIF(COUNT(DISTINCT candidate_id), 0),
+        4
+    ) AS pass_rate
+FROM interviews
+WHERE created_at >= CURRENT_DATE - INTERVAL '30 days'
+GROUP BY company
+ORDER BY pass_rate DESC, candidate_count DESC;`
+      },
+      "ViT loss": {
+        language: "python",
+        complexity: "loss 本身为 O(BC)，ViT 主体计算成本不在该函数中。",
+        code: String.raw`import torch
+import torch.nn.functional as F
+
+def vit_classification_loss(student_logits, targets,
+                            teacher_logits=None, temperature=2.0,
+                            distill_weight=0.5):
+    hard_loss = F.cross_entropy(student_logits, targets)
+    if teacher_logits is None:
+        return hard_loss
+
+    soft_targets = F.softmax(teacher_logits.detach() / temperature, dim=-1)
+    soft_loss = F.kl_div(
+        F.log_softmax(student_logits / temperature, dim=-1),
+        soft_targets,
+        reduction="batchmean"
+    ) * temperature ** 2
+    return (1 - distill_weight) * hard_loss + distill_weight * soft_loss`
+      },
+      "QLoRA dequant linear": {
+        language: "python",
+        complexity: "教学版会显式生成反量化权重，额外空间 O(D_out D_in)，生产 fused kernel 应避免该开销。",
+        code: String.raw`import torch.nn.functional as F
+
+def dequant_linear(x, qweight, scale, zero_point=None, bias=None):
+    # 教学版均匀分组量化。真实 QLoRA 的 NF4 使用 codebook，
+    # 生产实现会在 matmul kernel 内按块反量化，不生成完整浮点权重。
+    if zero_point is None:
+        zero_point = 0
+    weight = (qweight.float() - zero_point) * scale
+    weight = weight.to(x.dtype)
+    return F.linear(x, weight, bias)`
+      },
+    };
+
     const CATEGORIES = [
-      { id: "post", label: "后训练 RL", target: 40 },
-      { id: "agent", label: "Agent/RAG", target: 35 },
-      { id: "infer", label: "推理系统", target: 25 },
-      { id: "train", label: "训练系统与数据", target: 25 },
+      { id: "post", label: "后训练 RL", target: 42 },
+      { id: "agent", label: "Agent/RAG", target: 36 },
+      { id: "infer", label: "推理系统", target: 26 },
+      { id: "train", label: "训练系统与数据", target: 26 },
       { id: "vlm", label: "多模态/VLM", target: 15 },
       { id: "project", label: "项目/论文答辩", target: 20 },
       { id: "company", label: "公司专项", target: 15 },
-      { id: "coding", label: "Coding 八股", target: 5 }
+      { id: "coding", label: "Coding 八股", target: 40 }
     ];
 
     const HOOKS = {
@@ -1886,7 +2812,9 @@
         ["IPO KTO SimPO", "IPO、KTO、SimPO 这类方法和 DPO 怎么比较？", ["它们都在简化或改造偏好优化目标，减少PPO式RL复杂度", "差异主要在偏好数据形式、reference依赖、长度偏置和优化稳定性", "面试里不用背所有公式，要讲清适用数据和风险"], ["什么时候用KTO？", "SimPO为什么讨论reference-free？"], ["堆名词但不讲目标函数解决什么痛点"], "web", "进阶"],
         ["Online RL vs offline preference", "online RL 和 offline preference optimization 怎么取舍？", ["offline方法便宜稳定，适合已有偏好数据和单轮响应优化", "online RL能探索新策略产生的数据，适合推理、工具、环境交互任务", "选择取决于reward可靠性、探索需求、算力和安全风险"], ["Agent任务为什么更需要online？", "离线偏好能不能训练工具调用？"], ["把所有RL都等同于PPO"], "rlhf", "高频追问"],
         ["When not to RL", "什么情况下不应该急着做 RL？", ["如果SFT基础能力和格式都不稳定，RL会放大噪声", "如果reward不可验证或评测不可靠，RL可能优化错目标", "数据质量问题、业务定义不清和算力不足时，先做数据和评测闭环更稳"], ["老板要求上RL怎么办？", "怎么证明SFT还没到RL阶段？"], ["为了追热点而忽略评测"], "report", "高频追问"],
-        ["Agent RL pitfalls", "用 RL 训练 Agent 最容易踩什么坑？", ["reward稀疏且容易错配真实目标", "环境和工具不稳定会让训练信号噪声很大", "没有可复现harness和安全边界时，训练结果无法解释"], ["如何先做最小闭环？", "哪些Agent任务不适合RL？"], ["先上RL再补评测"], "agent", "高频追问"]
+        ["Agent RL pitfalls", "用 RL 训练 Agent 最容易踩什么坑？", ["reward稀疏且容易错配真实目标", "环境和工具不稳定会让训练信号噪声很大", "没有可复现harness和安全边界时，训练结果无法解释"], ["如何先做最小闭环？", "哪些Agent任务不适合RL？"], ["先上RL再补评测"], "agent", "高频追问"],
+        ["PPO model roles", "PPO/GRPO 中 policy、old policy 和 reference model 分别起什么作用？", ["policy是当前待优化模型并接收梯度", "old policy是生成或缓存当前rollout时的行为策略，用于importance ratio和clip，通常按迭代周期刷新", "reference model是更长期冻结的能力锚点，用于KL约束；old policy和reference可以初始相同但语义不同"], ["为什么不能直接用policy概率而不除old policy？", "old policy多久更新一次？"], ["把old policy和reference model当成同一个模型；认为三者都接收梯度"], "ppo", "高频追问"],
+        ["Token vs sequence IS", "LLM RL 中 token-level 和 sequence-level importance sampling 有什么区别？", ["token-level ratio逐token修正新旧策略分布差异，能配合token mask和clip", "sequence-level ratio是整条response概率比，等价于token log-ratio求和后取指数", "长序列中sequence ratio方差会快速增大，容易由少数轨迹主导更新，因此更常使用token级目标或额外截断"], ["为什么序列概率不能直接连乘？", "off-policy数据太旧会出现什么问题？"], ["忘记padding mask；在概率空间直接连乘导致下溢；认为两种ratio只是实现差异"], "ppo", "高频追问"]
       ],
       agent: [
         ["RAG baseline", "一个标准 RAG 系统怎么拆？", ["离线把文档清洗、切块、向量化并入库", "在线做query改写、召回、重排、上下文拼接和生成", "验收要看召回率、faithfulness、引用质量、延迟和成本"], ["RAG和微调怎么选？", "RAG为什么不能完全解决幻觉？"], ["只说向量数据库，不说评测"], "rag", "基础"],
@@ -1923,7 +2851,8 @@
         ["Intent understanding", "多轮 Agent 怎么做用户意图识别？", ["要从当前输入、历史上下文和任务状态里恢复真实目标", "不确定时应澄清，而不是擅自执行高风险动作", "可用意图分类、约束抽取和任务状态机辅助"], ["什么时候该问用户？", "用户目标变化怎么办？"], ["把第一轮意图固定到底"], "agent", "基础"],
         ["RAG poisoning", "RAG/Agent 如何防 prompt injection 和知识库投毒？", ["检索内容和网页内容不能当系统指令执行", "要分离数据和指令，做来源可信度、内容过滤和工具权限隔离", "对高风险动作要二次确认和审计"], ["网页里写忽略系统提示怎么办？", "知识库被污染怎么发现？"], ["把外部文档无条件放最高优先级"], "rag", "高频追问"],
         ["Cost latency", "Agent 系统如何控制成本和延迟？", ["减少不必要工具调用、控制检索top-k、缓存中间结果和并行可并行步骤", "按任务难度选择模型和策略，简单任务不要走复杂Agent", "指标上同时看成功率、平均步数、token、工具耗时和失败重试"], ["什么时候用小模型router？", "并行会带来什么风险？"], ["只追求成功率，不看成本"], "agent", "基础"],
-        ["Trace quality", "Agent 轨迹质量怎么判断？", ["看每步是否有明确目的、是否使用正确证据、是否能根据观察修正", "还要看有没有无效调用、循环、泄露隐私或违反安全策略", "好轨迹应该能被重放和用于训练"], ["轨迹长是否一定好？", "如何自动标注坏轨迹？"], ["只看最终答案对不对"], "agent", "进阶"]
+        ["Trace quality", "Agent 轨迹质量怎么判断？", ["看每步是否有明确目的、是否使用正确证据、是否能根据观察修正", "还要看有没有无效调用、循环、泄露隐私或违反安全策略", "好轨迹应该能被重放和用于训练"], ["轨迹长是否一定好？", "如何自动标注坏轨迹？"], ["只看最终答案对不对"], "agent", "进阶"],
+        ["AST and LSP", "Coding Agent 为什么要理解 AST 和 LSP，它们分别解决什么问题？", ["AST提供代码的语法结构，适合精确定位定义、调用、控制流和可编辑节点", "LSP通过统一协议提供符号、定义跳转、引用、诊断和补全等语言服务", "Agent可先用文本检索缩小范围，再用AST/LSP做结构化定位和安全修改，最后以编译和测试验证"], ["只用grep为什么不够？", "AST解析失败或语言服务不可用时如何降级？"], ["把AST等同于字符串匹配；把LSP说成某个编辑器插件；修改后不跑测试"], "agent", "进阶"]
       ],
       infer: [
         ["MHA formula", "手写 MHA 前要先讲清哪些张量形状？", ["输入是batch、seq、hidden，QKV投影后拆成heads和head_dim", "attention score是Q乘K转置再除以sqrt(d)，mask后softmax乘V", "最后concat各head并过输出投影"], ["为什么要除以sqrt(d)？", "mask在哪里加？"], ["形状讲不清就直接写代码"], "transformer", "基础"],
@@ -1950,7 +2879,8 @@
         ["Tensor parallel inference", "推理里的 tensor parallel 怎么理解？", ["把单层大矩阵按列或行切到多张GPU上并行算", "适合单卡放不下或单卡算力不足的大模型", "代价是GPU间通信，batch小或网络差时收益受限"], ["TP和PP区别？", "attention和MLP怎么切？"], ["以为多卡一定线性加速"], "zero", "基础"],
         ["Pipeline inference", "pipeline parallel 推理适合什么场景？", ["把不同层放到不同GPU，解决模型太深或太大单卡放不下", "吞吐依赖micro-batch和流水线填充，单请求延迟可能增加", "常和tensor parallel结合使用"], ["bubble是什么？", "prefill和decode阶段PP表现一样吗？"], ["只考虑显存，不考虑流水线气泡"], "zero", "进阶"],
         ["SGLang RadixAttention", "SGLang/RadixAttention 解决什么问题？", ["复杂LLM程序会有多次生成、分支和共享前缀", "RadixAttention通过前缀树复用KV cache，减少重复计算", "它适合Agent、RAG、多轮和结构化输出场景"], ["和vLLM PagedAttention有什么不同？", "structured output怎么加速？"], ["把SGLang只当另一个API server"], "sglang", "进阶"],
-        ["Streaming decode", "流式输出为什么能改善体验？", ["模型总生成时间不变，但用户更早看到首token和中间结果", "流式适合长答案和交互式应用，要处理取消、回压和错误", "不能用流式掩盖TTFT过高或内容质量问题"], ["流式对吞吐有什么影响？", "Agent工具调用能不能流式？"], ["把流式当成推理加速算法"], "web", "基础"]
+        ["Streaming decode", "流式输出为什么能改善体验？", ["模型总生成时间不变，但用户更早看到首token和中间结果", "流式适合长答案和交互式应用，要处理取消、回压和错误", "不能用流式掩盖TTFT过高或内容质量问题"], ["流式对吞吐有什么影响？", "Agent工具调用能不能流式？"], ["把流式当成推理加速算法"], "web", "基础"],
+        ["Floating-point layout", "FP32、FP16 和 BF16 的符号位、指数位和尾数位分别是多少，为什么 BF16 动态范围更大？", ["FP32是1位符号、8位指数、23位尾数，FP16是1/5/10，BF16是1/8/7", "BF16与FP32同为8位指数，因此动态范围接近FP32，但尾数更短、精度低于FP16", "训练中常用BF16保存激活和计算，同时保留部分FP32状态以提高稳定性"], ["FP16为什么常需要loss scaling？", "数值范围和有效精度有什么区别？"], ["把BF16说成比FP16在所有方面都更精确；只背位数不解释指数偏置和动态范围"], "web", "高频追问"]
       ],
       train: [
         ["Memory estimate", "训练 8B 模型静态显存怎么估？", ["参数bf16约2字节，8B参数约16GB", "全参训练还要梯度和优化器状态，Adam通常远大于参数本身", "粗估可按参数、梯度、优化器、激活和碎片分别拆"], ["为什么有人说约参数显存6倍？", "LoRA会省哪部分？"], ["只算参数，不算优化器和激活"], "zero", "基础"],
@@ -1977,7 +2907,8 @@
         ["FP8 training", "FP8 训练的收益和风险是什么？", ["FP8降低显存和带宽，提高训练吞吐", "风险是数值范围和精度不足，需要缩放、校准和关键算子保精度", "适合大规模训练系统优化，但必须有稳定性监控"], ["FP8和bf16怎么混用？", "哪些张量不适合FP8？"], ["把FP8当无损压缩"], "deepseek", "进阶"],
         ["Ray verl", "verl/Ray 在 LLM RL 里起什么作用？", ["Ray负责分布式资源和actor调度，verl组织policy、rollout、reward和trainer", "它让vLLM rollout、训练GPU和reward服务协同", "面试要说清数据流和资源瓶颈"], ["TRL和verl有什么区别？", "rollout worker如何扩展？"], ["只说框架名，不讲底层资源调度"], "ray", "高频追问"],
         ["vLLM rollout", "为什么 RL 训练里常用 vLLM 加速 rollout？", ["rollout是生成大量候选或轨迹，推理吞吐直接决定训练速度", "vLLM用PagedAttention和continuous batching提高并发", "还要处理logprob回传、采样参数一致和模型权重同步"], ["权重更新后rollout服务怎么同步？", "vLLM和训练进程共享GPU吗？"], ["只把vLLM当部署工具"], "vllm", "高频追问"],
-        ["RL compute bottleneck", "大规模 LLM RL 的计算瓶颈在哪里？", ["rollout生成成本高，尤其长链推理和多采样group", "训练还要跑reward、logprob、KL和反向传播", "系统上要优化vLLM rollout、Ray资源调度、batching和异步流水"], ["为什么RL比SFT贵？", "显存瓶颈和吞吐瓶颈分别是什么？"], ["只说GPU不够，不拆rollout和训练"], "ray", "进阶"]
+        ["RL compute bottleneck", "大规模 LLM RL 的计算瓶颈在哪里？", ["rollout生成成本高，尤其长链推理和多采样group", "训练还要跑reward、logprob、KL和反向传播", "系统上要优化vLLM rollout、Ray资源调度、batching和异步流水"], ["为什么RL比SFT贵？", "显存瓶颈和吞吐瓶颈分别是什么？"], ["只说GPU不够，不拆rollout和训练"], "ray", "进阶"],
+        ["Gradient clipping", "梯度裁剪为什么能稳定大模型训练，global norm clipping 是怎样工作的？", ["先计算全部待更新参数梯度的全局L2范数", "当范数超过阈值时按threshold除以norm的比例统一缩放所有梯度，保持方向不变", "它能限制异常batch造成的单步更新，但不能修复坏数据、错误loss或长期数值不稳定"], ["逐元素clipping与global norm clipping有什么区别？", "混合精度下应该在unscale之前还是之后裁剪？"], ["把梯度裁剪当成解决所有loss spike的方法；在AMP梯度仍被scale时直接裁剪"], "web", "基础"]
       ],
       vlm: [
         ["LLaVA", "LLaVA 架构怎么口述？", ["通常由vision encoder、投影层和LLM组成", "先做图文对齐，再做视觉指令微调", "关键是视觉token如何接入LLM以及多模态指令数据质量"], ["为什么要两阶段训练？", "投影层作用是什么？"], ["只说CLIP加LLM，不讲对齐训练"], "llava", "基础"],
@@ -2040,7 +2971,42 @@
         ["Top-p sampling", "手写 top-p sampling 的步骤是什么？", ["对logits做temperature缩放和softmax", "按概率降序排序，取累计概率达到p的最小集合", "对候选概率重归一后采样，并映射回原token id"], ["top-k和top-p怎么同时用？", "p很小时有什么风险？"], ["忘记重归一或索引映射"], "sampling", "基础"],
         ["GRPO trainer skeleton", "手写一个最小 GRPO trainer 伪代码怎么组织？", ["对每个prompt采样G个response并计算old logprob", "reward后做组内均值方差归一得到advantage", "用ratio、clip、KL和mask计算loss并反向更新"], ["padding位置怎么mask？", "reward全一样怎么办？"], ["只写loss公式，不写数据流"], "grpo", "高频追问"],
         ["Sampler", "实现一个可复现采样器要注意什么？", ["输入logits、temperature、top-k/top-p和随机种子", "处理非法token、mask、概率归一和数值稳定", "输出token和必要的logprob，便于RL训练"], ["如何返回logprob？", "如何批量采样？"], ["只返回token，不保留训练需要的信息"], "sampling", "基础"],
-        ["DP grid", "面试里遇到网格路径或股票DP怎么稳住？", ["先定义状态和转移，再讲边界条件", "说明时间空间复杂度，并给滚动数组优化", "最后回到大模型岗位：coding题考查的是基本工程可靠性"], ["路径有障碍怎么办？", "股票可多次交易怎么改？"], ["急着写代码不定义状态"], "report", "基础"]
+        ["DP grid", "手写不同路径：m×n 网格只能向右或向下，怎样用一维 DP 优化空间？", ["定义dp[j]为当前行到达第j列的路径数", "转移是dp[j]=dp[j]+dp[j-1]", "时间O(mn)、空间O(n)，有障碍时把对应位置清零"], ["有障碍物怎么改？", "能否用组合数直接计算？"], ["没有处理m或n为0；原地更新顺序写反"], "xhsCoding", "基础"],
+        ["PPO loss", "用 PyTorch 手写 PPO 的 clipped policy loss、value loss 和 entropy bonus。", ["ratio必须由new logprob减old logprob后取exp", "policy目标取未截断与截断surrogate的较小值", "critic回归detach后的return，并只在有效response token上聚合"], ["为什么value也可以clip？", "old policy和reference model有什么区别？"], ["直接使用概率相除导致下溢；忘记mask prompt和padding；return没有detach"], "ppo", "高频追问"],
+        ["GAE", "手写 GAE：如何从 reward、old value 和 done 得到 advantage 与 return？", ["先计算TD residual delta", "从后向前按gamma lambda递推GAE", "return等于advantage加rollout时缓存的old value"], ["真实终止和超时截断如何处理？", "为什么lambda控制偏差方差权衡？"], ["values没有多一个bootstrap位置；终止状态仍错误bootstrap"], "ppo", "高频追问"],
+        ["DPO loss", "手写 DPO loss，并说明四组 sequence logprob 分别来自哪里。", ["分别计算policy和reference对chosen/rejected的序列logprob", "用两者偏好margin之差构造logit", "最小化负log-sigmoid，reference参数冻结"], ["token logprob为什么要按response求和？", "beta调大意味着什么？"], ["把chosen和rejected拼接维度弄错；reference logprob参与梯度"], "dpo", "高频追问"],
+        ["Softmax and cross entropy", "不调用现成 CrossEntropyLoss，手写数值稳定的 Softmax 和交叉熵。", ["先减去每行最大logit避免exp溢出", "交叉熵可直接写成logsumexp减目标类logit", "实际实现无需显式构造完整softmax概率"], ["为什么softmax减常数不改变结果？", "ignore_index和label smoothing怎么加？"], ["先softmax再log导致数值不稳定；归一化维度写错"], "xhsCoding", "高频追问"],
+        ["MSE and KL", "手写 MSE 和 categorical KL(P||Q)，并解释 KL 的方向。", ["MSE是逐元素平方误差的平均", "KL(P||Q)是在P下计算logP减logQ的期望", "输入logits时先用log_softmax获得稳定的对数概率"], ["KL为什么不对称？", "PPO里常用哪种KL估计？"], ["把KL两个方向混用；直接对概率取log造成零概率问题"], "xhsCoding", "基础"],
+        ["AdamW", "从零手写一次 AdamW 参数更新，它与 Adam 加 L2 正则有什么区别？", ["维护一阶和二阶矩并做bias correction", "AdamW把weight decay与自适应梯度更新解耦", "更新状态和参数时关闭autograd记录"], ["为什么step从1开始？", "哪些参数通常不做weight decay？"], ["漏掉bias correction；把decoupled decay写回梯度"], "xhsCoding", "高频追问"],
+        ["RoPE", "手写 RoPE：怎样对 Q/K 的偶数维和奇数维做二维旋转？", ["每一对通道共享一个位置相关角度", "rotate_half实现(-x_odd,x_even)", "同一位置的Q和K使用相同cos/sin，便于得到相对位置信息"], ["为什么只作用在Q和K？", "长上下文外推怎样调整频率？"], ["维度配对方式错误；position_ids广播维度错误"], "transformer", "高频追问"],
+        ["RMSNorm", "手写 RMSNorm，并与 LayerNorm 的计算差异对比。", ["RMSNorm只按均方根缩放，不减均值", "归一化统计量最好用FP32计算", "最后乘可学习的逐通道scale并恢复输入dtype"], ["为什么没有bias？", "eps过小有什么风险？"], ["在错误维度求均值；低精度平方溢出"], "xhsCoding", "基础"],
+        ["Transformer block", "手写一个 pre-norm Transformer decoder block，包含 causal attention 和 SwiGLU。", ["两条子层都采用norm、子层、residual的顺序", "causal mask屏蔽未来token", "SwiGLU用SiLU(gate)乘up projection后再down projection"], ["post-norm有什么训练差异？", "如何替换成GQA和RoPE？"], ["漏掉残差；causal mask方向写反；SwiGLU少一个投影"], "transformer", "高频追问"],
+        ["KV cache attention", "手写单步 decode 的 KV cache attention，cache 应该保存什么、怎样更新？", ["当前步只生成新的Q/K/V", "把新K/V沿序列维追加到历史cache", "当前Q对全部历史K/V做attention并返回更新后的cache"], ["prefill阶段怎么初始化？", "GQA的KV cache形状是什么？"], ["把Q也缓存；沿head维拼接；忘记RoPE位置"], "transformer", "高频追问"],
+        ["FlashAttention online softmax", "手写 FlashAttention 的 online softmax 核心递推，为什么不必保存完整 attention 矩阵？", ["将Q/K/V按块加载并维护每行running max、normalizer和加权和", "新块到来时用指数缩放修正旧累计量", "算法仍是精确attention，收益来自减少HBM读写"], ["怎样加入causal mask？", "为什么FLOPs没有从O(n²)变成线性？"], ["把FlashAttention说成稀疏近似；更新running max后不重缩放旧结果"], "flash", "高频追问"],
+        ["Importance sampling", "手写 token-level 和 sequence-level importance ratio，它们在 LLM RL 中有什么差别？", ["token ratio逐token比较新策略和behavior policy", "sequence ratio对整条response的log-ratio求和后再exp", "长序列的sequence ratio方差容易爆炸，因此通常需要clip或更细粒度目标"], ["为什么不能直接相乘概率？", "off-policy rollout陈旧时会怎样？"], ["在概率空间连乘造成下溢；padding token进入序列ratio"], "xhsCoding", "高频追问"],
+        ["Kth largest", "手写数组第 K 大：用 Quickselect 达到平均 O(n)，再比较最小堆方案。", ["第K大对应升序下标n-k", "partition后只进入包含目标下标的一侧", "Quickselect平均O(n)，最小堆稳定O(n log k)"], ["如何避免最坏O(n²)？", "海量流式数据应该选什么？"], ["k和下标转换错；partition边界死循环"], "xhsCoding", "高频追问"],
+        ["Longest substring", "手写无重复字符的最长子串。", ["滑动窗口维护当前无重复区间", "哈希表记录字符最后出现位置", "左边界只能右移，不能退回"], ["如果要求返回子串怎么办？", "Unicode字符是否有影响？"], ["遇到窗口外重复字符也错误回退left"], "xhsCoding", "基础"],
+        ["Valid parentheses", "手写最长有效括号，解释栈中为什么先放 -1。", ["栈保存尚未匹配左括号的下标和最近失效边界", "右括号匹配后用当前位置减栈顶得到长度", "栈空时把当前右括号设为新边界"], ["怎样用左右两次扫描做到O(1)空间？", "输入含其他字符怎么办？"], ["栈空时仍访问栈顶；只统计括号对数量"], "xhsCoding", "基础"],
+        ["Rotated array", "手写搜索旋转排序数组，并说明如何判断哪一半有序。", ["每轮至少有一侧保持有序", "先判断target是否落在有序半边区间", "根据区间排除另一半，保持O(log n)"], ["数组允许重复元素会怎样？", "如何找旋转点？"], ["区间开闭条件错误；重复元素仍声称严格O(log n)"], "xhsCoding", "基础"],
+        ["Three sum", "手写三数之和，怎样完整去重？", ["先排序，再固定第一个数并用双指针", "固定值重复时跳过", "找到答案后左右指针都移动并跳过重复值"], ["为什么可以在nums[i]>0时提前结束？", "如何扩展到k-sum？"], ["只去重固定值，没有去重左右指针"], "xhsCoding", "基础"],
+        ["Trapping rain water", "手写接雨水的双指针解法，为什么移动较低的一侧？", ["某侧较低时，该侧水位上界已由自身最大值确定", "维护left_max和right_max", "每次累加当前最大边界减当前高度"], ["单调栈怎么写？", "柱宽不为1时怎么办？"], ["先移动指针再计算导致漏算；边界差出现负数"], "xhsCoding", "进阶"],
+        ["Reverse linked list", "手写迭代版反转链表。", ["维护previous、current和next_node", "改指针前必须先保存下一节点", "循环结束previous就是新头结点"], ["递归版空间复杂度？", "如何反转指定区间？"], ["先改current.next后丢失后续链表"], "xhsCoding", "基础"],
+        ["Reverse k-group", "手写 K 个一组翻转链表，不足 K 个节点保持原顺序。", ["先找到本组第K个节点，确认节点数足够", "把group_next作为局部反转初始previous", "反转后连接上一组尾部并移动group_prev"], ["为什么previous初始化为group_next？", "k=1如何处理？"], ["最后不足K个也被反转；组间连接断链"], "xhsCoding", "高频追问"],
+        ["Merge k lists", "手写合并 K 个升序链表，为什么堆元素需要额外计数器？", ["最小堆始终保留每条链表当前头节点", "弹出最小节点后把其next入堆", "计数器避免节点值相同时Python继续比较不可排序的节点对象"], ["分治合并复杂度是多少？", "如何避免修改原链表？"], ["相同val触发对象比较错误；忘记推进node.next"], "xhsCoding", "进阶"],
+        ["Linked-list intersection", "手写判断两条单链表的相交节点，要求 O(1) 额外空间。", ["两个指针走完自身链表后切换到另一条链表头", "两者总路程都等于m+n", "最终在交点或None处相遇"], ["链表有环怎么办？", "相交是按值还是按对象身份？"], ["比较节点值而非节点对象；None切换顺序错误"], "xhsCoding", "基础"],
+        ["Edit distance", "手写编辑距离，并用滚动数组优化空间。", ["状态表示两个前缀之间的最小编辑次数", "字符相同继承左上角，否则取删除、插入、替换的最小值加1", "只依赖上一行和当前行左侧"], ["如何恢复具体编辑路径？", "不同操作代价不同时怎么改？"], ["三种转移下标混淆；首行首列初始化错误"], "xhsCoding", "高频追问"],
+        ["Longest common subsequence", "手写最长公共子序列，并解释它与最长公共子串的区别。", ["字符相同取左上角加1", "字符不同取上方和左方最大值", "子序列不要求连续，子串要求连续"], ["如何恢复具体LCS？", "一维DP为什么要新建current而不是随意原地更新？"], ["把子序列当成子串；一维更新覆盖旧状态"], "xhsCoding", "基础"],
+        ["Longest increasing subsequence", "手写 O(n log n) 的最长递增子序列长度。", ["tails[i]保存长度i+1递增子序列的最小尾值", "用bisect_left找到第一个不小于当前值的位置", "tails本身不一定是原数组真实LIS，但长度正确"], ["如何恢复真实LIS？", "非严格递增应该用哪个二分函数？"], ["误认为tails就是最终子序列；严格与非严格二分选错"], "xhsCoding", "进阶"],
+        ["Stock profit", "手写只能交易一次的股票最大利润。", ["扫描时维护历史最低买入价", "当前价格减最低价得到当天卖出的收益", "同步更新全局最大收益"], ["允许无限次交易怎么改？", "最多K次交易的状态怎么定义？"], ["先更新最低价还是利润虽通常等价，但没讲清不能先卖后买"], "xhsCoding", "基础"],
+        ["House robber", "手写打家劫舍，并把二维含义压缩成两个变量。", ["当前位置选择抢时只能接i-2的最优值", "不抢则继承i-1最优值", "每轮同步滚动两个历史状态"], ["房屋首尾相连怎么改？", "树形房屋怎么做？"], ["滚动变量更新顺序导致覆盖i-2状态"], "xhsCoding", "基础"],
+        ["Level-order traversal", "手写二叉树层序遍历，怎样保证按层输出？", ["队列保存待访问节点", "每轮先记录当前队列长度作为本层节点数", "处理本层时把子节点加入队尾"], ["如何做锯齿形层序？", "怎样返回每层平均值？"], ["边遍历边使用变化后的queue长度确定本层范围"], "xhsCoding", "基础"],
+        ["Validate BST", "手写验证二叉搜索树，为什么只比较父节点不够？", ["每个节点必须同时满足祖先传下来的上下界", "左子树更新upper，右子树更新lower", "严格BST不允许等于边界"], ["中序遍历怎么写？", "允许重复值时规则怎么定义？"], ["只检查node.left<node<node.right，漏掉祖先约束"], "xhsCoding", "基础"],
+        ["Binary-tree max path", "手写二叉树最大路径和，递归函数应该返回什么？", ["递归向父节点只能返回一条单边最大增益", "左右正增益可同时用于更新经过当前节点的全局答案", "负增益按0丢弃"], ["全是负数为什么不能把best初始化为0？", "路径是否必须经过根节点？"], ["向父节点同时返回左右两支，形成分叉而不是路径"], "xhsCoding", "高频追问"],
+        ["Max island area", "手写最大岛屿面积，给出 DFS/BFS 的边界和访问标记。", ["遍历每个未访问陆地作为搜索起点", "入栈时立刻标记，避免同一格重复入栈", "每次搜索累计面积并更新最大值"], ["不允许修改原grid怎么办？", "递归DFS有什么风险？"], ["出栈后才标记造成重复；空grid没有处理"], "xhsCoding", "基础"],
+        ["Sliding-window maximum", "手写滑动窗口最大值，单调队列中保存值还是下标？", ["队列保存下标，才能判断元素是否过期", "队列对应值保持单调递减", "队首始终是当前窗口最大值"], ["为什么每个元素只入队出队一次？", "窗口大小非法时怎么处理？"], ["只保存值导致重复值过期无法判断；过期判断边界错一位"], "xhsCoding", "高频追问"],
+        ["SQL aggregation", "给定面试记录表，写 SQL 统计近 30 天各公司候选人数、通过人数和通过率。", ["先按时间过滤减少扫描", "candidate_id需要按业务口径去重", "用CASE WHEN条件聚合，并用NULLIF防止除零"], ["MySQL和PostgreSQL日期语法有什么区别？", "如果同一候选人有多轮记录如何只取最终结果？"], ["整数除法导致通过率为0；COUNT行数而非候选人数"], "xhsCoding", "进阶"],
+        ["ViT loss", "手写 ViT 分类 loss，并扩展到有 teacher logits 的蒸馏 loss。", ["基础ViT分类通常对class token输出做交叉熵", "蒸馏时对温度缩放后的teacher分布计算KL", "KL项乘temperature平方保持梯度尺度"], ["DeiT的distillation token有什么作用？", "多标签分类应换什么loss？"], ["teacher logits没有detach；温度只作用一侧；把ViT误认为有专属固定loss"], "xhsCoding", "进阶"],
+        ["QLoRA dequant linear", "手写量化权重的反量化线性层，并解释真实 QLoRA 为什么需要 fused dequant-matmul。", ["教学实现先按scale和zero point恢复浮点权重再做linear", "真实NF4使用非均匀codebook而不是普通均匀整数", "生产kernel按块反量化并立刻矩阵乘，避免保存完整浮点权重"], ["NF4为什么适合近似正态权重？", "double quantization节省什么？"], ["把教学版均匀量化代码说成完整NF4；显式反量化导致显存优势消失"], "qlora", "高频追问"]
       ]
     };
 
@@ -2220,6 +3186,7 @@
           const lead = keys[0] || topic;
           const second = keys[1] || "再解释输入输出和适用边界";
           const third = keys[2] || "最后补评测和失败模式";
+          const codeAnswer = CODE_ANSWERS[topic] || null;
           const verified = verifiedChecks({ category, topic, question, source });
           const calibration = verified[0] ? `校准点：${verified[0]}` : "校准点：技术细节以论文、官方文档和可复现实现为准。";
           result.push({
@@ -2237,7 +3204,10 @@
             sources: source.urls,
             confidence: source.confidence,
             masteryLevel: 0,
-            topic
+            topic,
+            codeAnswer: codeAnswer?.code || "",
+            codeLanguage: codeAnswer?.language || "",
+            codeComplexity: codeAnswer?.complexity || ""
           });
         });
       });
@@ -2245,6 +3215,26 @@
     }
 
     const questions = buildQuestionBank();
+    const theoryQuestions = questions.filter(q => q.category !== "coding");
+    const codingQuestions = questions.filter(q => q.category === "coding");
+    const THEORY_CATEGORIES = CATEGORIES.filter(category => category.id !== "coding");
+    const CODE_GROUPS = [
+      {
+        id: "llm",
+        label: "大模型核心",
+        topics: ["MHA numpy", "Top-p sampling", "GRPO trainer skeleton", "Sampler", "PPO loss", "GAE", "DPO loss", "Softmax and cross entropy", "MSE and KL", "AdamW", "RoPE", "RMSNorm", "Transformer block", "KV cache attention", "FlashAttention online softmax", "Importance sampling", "QLoRA dequant linear"]
+      },
+      {
+        id: "algorithm",
+        label: "算法基础",
+        topics: ["DP grid", "Kth largest", "Longest substring", "Valid parentheses", "Rotated array", "Three sum", "Trapping rain water", "Reverse linked list", "Reverse k-group", "Merge k lists", "Linked-list intersection", "Edit distance", "Longest common subsequence", "Longest increasing subsequence", "Stock profit", "House robber", "Level-order traversal", "Validate BST", "Binary-tree max path", "Max island area", "Sliding-window maximum"]
+      },
+      {
+        id: "engineering",
+        label: "工程专项",
+        topics: ["SQL aggregation", "ViT loss"]
+      }
+    ];
     const STORAGE_KEY = "llm-interview-drill-180-v1";
     const SESSION_KEY = "llm-interview-drill-history-v1";
 
@@ -2262,7 +3252,10 @@
       questionStart: Date.now(),
       mock: null,
       activeAnswerTab: "oral",
-      slideIndex: 0
+      slideIndex: 0,
+      libraryMode: "theory",
+      codeVisible: false,
+      lastQuestionByLibrary: { theory: null, coding: null }
     };
 
     function loadState() {
@@ -2345,7 +3338,8 @@
         "slidePrev", "slideNext", "slideImportance", "slideImportanceReason", "slideProgressFill",
         "slideTopicNav", "slideImportanceTrack", "slideMastery", "slidePrevBottom",
         "slideNextBottom", "slideMarkBad", "slideMarkMid", "slideMarkGood", "slideBookmark",
-        "slideFooterNote", "slideProgressCompact"
+        "slideFooterNote", "slideProgressCompact", "libraryTheory", "libraryCoding",
+        "slideToggleCode", "slideHint"
       ].forEach(id => { els[id] = $(id); });
 
       buildCategoryFilter();
@@ -2384,10 +3378,41 @@
       els.slideMarkMid.onclick = () => markCurrent(1);
       els.slideMarkGood.onclick = () => markCurrent(2);
       els.slideBookmark.onclick = toggleBookmark;
+      els.libraryTheory.onclick = () => switchLibrary("theory");
+      els.libraryCoding.onclick = () => switchLibrary("coding");
+      els.slideToggleCode.onclick = toggleCodeAnswer;
       ["tabOral", "tabDeep", "tabFollow", "tabSource"].forEach(id => {
         els[id].onclick = () => setAnswerTab(els[id].dataset.tab);
       });
       document.addEventListener("keydown", handleKey);
+    }
+
+    function currentLibraryPool() {
+      return app.libraryMode === "coding" ? codingQuestions : theoryQuestions;
+    }
+
+    function switchLibrary(mode) {
+      if (mode === app.libraryMode) return;
+      const current = currentQuestion();
+      if (current) app.lastQuestionByLibrary[app.libraryMode] = current.id;
+      app.libraryMode = mode;
+      const pool = currentLibraryPool();
+      const rememberedId = app.lastQuestionByLibrary[mode];
+      const next = pool.find(q => q.id === rememberedId) || pool[0];
+      app.activeQuestionId = next.id;
+      app.activeCategory = next.category;
+      app.slideIndex = 0;
+      app.codeVisible = false;
+      app.answerVisible = true;
+      app.activeAnswerTab = "oral";
+      app.questionStart = Date.now();
+      render();
+    }
+
+    function toggleCodeAnswer() {
+      if (app.libraryMode !== "coding") return;
+      app.codeVisible = !app.codeVisible;
+      renderSlide();
     }
 
     function switchMode(mode) {
@@ -2591,7 +3616,9 @@
       els.answerPanel.classList.toggle("visible", app.answerVisible);
       els.answerBtn.textContent = app.answerVisible ? "隐藏答案" : "显示答案";
       els.oralAnswer.textContent = q.oralAnswer;
-      els.deepDive.textContent = q.deepDiveAnswer;
+      els.deepDive.textContent = q.deepDiveAnswer + (q.codeAnswer
+        ? `\n\n八、参考代码（${q.codeLanguage}）\n复杂度：${q.codeComplexity}\n\n${q.codeAnswer}`
+        : "");
       els.followUps.innerHTML = q.followUps.map(x => `<li>${x}</li>`).join("");
       els.pitfalls.innerHTML = q.pitfalls.map(x => `<li>${x}</li>`).join("");
       els.personalHook.textContent = q.personalHook;
@@ -2616,14 +3643,17 @@
     }
 
     function currentSlideIndex() {
-      const idx = questions.findIndex(q => q.id === app.activeQuestionId);
-      return idx >= 0 ? idx : app.slideIndex;
+      const pool = currentLibraryPool();
+      const idx = pool.findIndex(q => q.id === app.activeQuestionId);
+      return idx >= 0 ? idx : 0;
     }
 
     function moveSlide(delta) {
-      const next = (currentSlideIndex() + delta + questions.length) % questions.length;
+      const pool = currentLibraryPool();
+      const next = (currentSlideIndex() + delta + pool.length) % pool.length;
       app.slideIndex = next;
-      app.activeQuestionId = questions[next].id;
+      app.activeQuestionId = pool[next].id;
+      app.codeVisible = false;
       app.answerVisible = true;
       app.activeAnswerTab = "oral";
       app.questionStart = Date.now();
@@ -2648,6 +3678,58 @@
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#39;");
+    }
+
+    const PYTHON_KEYWORDS = new Set([
+      "and", "as", "assert", "async", "await", "break", "class", "continue",
+      "def", "del", "elif", "else", "except", "false", "finally", "for", "from",
+      "global", "if", "import", "in", "is", "lambda", "none", "nonlocal", "not",
+      "or", "pass", "raise", "return", "true", "try", "while", "with", "yield"
+    ]);
+    const PYTHON_BUILTINS = new Set([
+      "abs", "bool", "dict", "enumerate", "float", "int", "len", "list", "map",
+      "max", "min", "next", "print", "range", "reversed", "set", "sorted", "str",
+      "sum", "super", "tuple", "zip", "self", "torch", "np", "nn", "f"
+    ]);
+    const SQL_KEYWORDS = new Set([
+      "as", "asc", "by", "case", "current_date", "desc", "distinct", "else", "end",
+      "from", "group", "having", "interval", "join", "left", "not", "null", "on",
+      "or", "order", "right", "select", "then", "when", "where"
+    ]);
+    const SQL_BUILTINS = new Set(["avg", "count", "max", "min", "nullif", "round", "sum"]);
+    const PYTHON_TOKEN_PATTERN = /#[^\n]*|"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|@[A-Za-z_][\w.]*|\b(?:and|as|assert|async|await|break|class|continue|def|del|elif|else|except|False|finally|for|from|global|if|import|in|is|lambda|None|nonlocal|not|or|pass|raise|return|True|try|while|with|yield|abs|bool|dict|enumerate|float|int|len|list|map|max|min|next|print|range|reversed|set|sorted|str|sum|super|tuple|zip|self|torch|np|nn|F)\b|\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b/gi;
+    const SQL_TOKEN_PATTERN = /--[^\n]*|'(?:''|[^'])*'|\b(?:AS|ASC|AVG|BY|CASE|COUNT|CURRENT_DATE|DESC|DISTINCT|ELSE|END|FROM|GROUP|HAVING|INTERVAL|JOIN|LEFT|MAX|MIN|NOT|NULL|NULLIF|ON|OR|ORDER|RIGHT|ROUND|SELECT|SUM|THEN|WHEN|WHERE)\b|\b\d+(?:\.\d+)?\b/gi;
+
+    function syntaxClass(token, language) {
+      const lower = token.toLowerCase();
+      if (token.startsWith("#") || token.startsWith("--")) return "comment";
+      if (token.startsWith('"') || token.startsWith("'")) return "string";
+      if (token.startsWith("@")) return "decorator";
+      if (/^\d/.test(token)) return "number";
+      if (language === "sql") return SQL_KEYWORDS.has(lower) ? "keyword" : "builtin";
+      if (PYTHON_KEYWORDS.has(lower)) return "keyword";
+      if (PYTHON_BUILTINS.has(lower)) return "builtin";
+      return "";
+    }
+
+    function highlightCode(source, language) {
+      const normalizedLanguage = String(language || "").toLowerCase();
+      const pattern = normalizedLanguage === "sql"
+        ? new RegExp(SQL_TOKEN_PATTERN.source, SQL_TOKEN_PATTERN.flags)
+        : normalizedLanguage === "python"
+          ? new RegExp(PYTHON_TOKEN_PATTERN.source, PYTHON_TOKEN_PATTERN.flags)
+          : null;
+      if (!pattern) return escapeHtml(source);
+
+      let html = "";
+      let cursor = 0;
+      for (const match of source.matchAll(pattern)) {
+        html += escapeHtml(source.slice(cursor, match.index));
+        const className = syntaxClass(match[0], normalizedLanguage);
+        html += `<span class="syntax-${className}">${escapeHtml(match[0])}</span>`;
+        cursor = match.index + match[0].length;
+      }
+      return html + escapeHtml(source.slice(cursor));
     }
 
     function deepDiveSections(q) {
@@ -2688,6 +3770,15 @@
       const sources = q.sources.length
         ? q.sources.map(x => x.label)
         : ["无外部链接"];
+      const codeSection = q.codeAnswer
+        ? `<section class="slide-code-section">
+            <h2>参考代码</h2>
+            <p class="slide-code-meta">${escapeHtml(q.codeLanguage.toUpperCase())} · ${escapeHtml(q.codeComplexity)}</p>
+            ${app.codeVisible
+              ? `<pre class="slide-code"><code class="language-${escapeHtml(q.codeLanguage)}">${highlightCode(q.codeAnswer, q.codeLanguage)}</code></pre>`
+              : `<div class="slide-code-placeholder">代码已隐藏。先完成思路和边界分析，再点击底部“显示代码”。</div>`}
+          </section>`
+        : "";
 
       return `<section class="slide-answer-lead">
         <h2>面试回答</h2>
@@ -2695,6 +3786,7 @@
       </section>
       <div class="slide-answer-columns">
         ${sections}
+        ${codeSection}
         <section class="slide-recall">
           <h2>追问与落地检查</h2>
           <div class="slide-recall-grid">
@@ -2743,17 +3835,46 @@
     }
 
     function questionImportanceTrack(q, importance) {
+      if (q.category === "coding" && codeGroupForQuestion(q).id === "engineering") return "landing";
       if (q.category === "project" || q.category === "company") return "landing";
       if (importance.level === 3) return "core";
       if (q.difficulty.includes("进阶") || q.difficulty.includes("高频")) return "advanced";
       return "basic";
     }
 
-    function renderSlideTopicNav() {
-      els.slideTopicNav.innerHTML = CATEGORIES.map(cat => {
+    function codeGroupForQuestion(question) {
+      return CODE_GROUPS.find(group => group.topics.includes(question.topic)) || CODE_GROUPS[0];
+    }
+
+    function renderSlideTopicNav(q) {
+      if (app.libraryMode === "coding") {
+        const activeGroup = codeGroupForQuestion(q);
+        els.slideTopicNav.innerHTML = CODE_GROUPS.map(group => {
+          const pool = codingQuestions.filter(item => group.topics.includes(item.topic));
+          const mastered = pool.filter(item => getProgress(item.id).masteryLevel === 2).length;
+          const active = activeGroup.id === group.id ? "active" : "";
+          return `<button class="slide-topic-btn ${active}" data-code-group="${group.id}">
+            ${group.label}<small>${mastered}/${pool.length}</small>
+          </button>`;
+        }).join("");
+        els.slideTopicNav.querySelectorAll("button").forEach(btn => {
+          btn.onclick = () => {
+            const group = CODE_GROUPS.find(item => item.id === btn.dataset.codeGroup);
+            const first = codingQuestions.find(item => group.topics.includes(item.topic));
+            app.activeQuestionId = first.id;
+            app.codeVisible = false;
+            app.answerVisible = true;
+            app.questionStart = Date.now();
+            render();
+          };
+        });
+        return;
+      }
+
+      els.slideTopicNav.innerHTML = THEORY_CATEGORIES.map(cat => {
         const pool = categoryPool(cat.id);
-        const mastered = pool.filter(q => getProgress(q.id).masteryLevel === 2).length;
-        const active = app.activeCategory === cat.id ? "active" : "";
+        const mastered = pool.filter(item => getProgress(item.id).masteryLevel === 2).length;
+        const active = q.category === cat.id ? "active" : "";
         return `<button class="slide-topic-btn ${active}" data-category="${cat.id}">
           ${cat.label}<small>${mastered}/${pool.length}</small>
         </button>`;
@@ -2762,9 +3883,9 @@
         btn.onclick = () => {
           app.activeCategory = btn.dataset.category;
           app.mode = "challenge";
-          const first = categoryPool(app.activeCategory)[0] || questions[0];
+          const first = categoryPool(app.activeCategory)[0] || theoryQuestions[0];
           app.activeQuestionId = first.id;
-          app.slideIndex = questions.findIndex(q => q.id === first.id);
+          app.codeVisible = false;
           app.answerVisible = true;
           app.activeAnswerTab = "oral";
           app.questionStart = Date.now();
@@ -2774,32 +3895,36 @@
     }
 
     function renderSlideImportanceTrack(activeKey) {
-      const markers = [
-        ["basic", "基础速过"],
-        ["core", "高频核心"],
-        ["advanced", "进阶追问"],
-        ["landing", "项目落地"]
-      ];
+      const markers = app.libraryMode === "coding"
+        ? [["basic", "基础手写"], ["core", "模型核心"], ["advanced", "进阶算法"], ["landing", "工程专项"]]
+        : [["basic", "基础速过"], ["core", "高频核心"], ["advanced", "进阶追问"], ["landing", "项目落地"]];
       els.slideImportanceTrack.innerHTML = markers.map(([key, label]) =>
         `<span class="slide-marker ${key === activeKey ? "active" : ""}">${label}</span>`
       ).join("");
     }
 
     function renderSlide() {
+      const pool = currentLibraryPool();
       const idx = currentSlideIndex();
-      const q = questions[idx] || questions[0];
+      const q = pool[idx] || pool[0];
       const importance = questionImportance(q);
       const progress = getProgress(q.id);
       const masteryText = progress.masteryLevel === 2 ? "掌握" : progress.masteryLevel === 1 ? "模糊" : progress.answered ? "不会" : "未练";
       const trackKey = questionImportanceTrack(q, importance);
       app.slideIndex = idx;
+      app.activeQuestionId = q.id;
       app.activeCategory = q.category;
+      app.lastQuestionByLibrary[app.libraryMode] = q.id;
       els.slideIndex.textContent = String(idx + 1);
-      els.slideTotal.textContent = String(questions.length);
+      els.slideTotal.textContent = String(pool.length);
+      els.libraryTheory.classList.toggle("active", app.libraryMode === "theory");
+      els.libraryCoding.classList.toggle("active", app.libraryMode === "coding");
+      els.libraryTheory.setAttribute("aria-selected", app.libraryMode === "theory" ? "true" : "false");
+      els.libraryCoding.setAttribute("aria-selected", app.libraryMode === "coding" ? "true" : "false");
       els.slideImportance.textContent = `重要性 ${importance.label}`;
       els.slideImportance.dataset.level = String(importance.level);
       els.slideImportanceReason.textContent = importance.reason;
-      els.slideProgressFill.style.width = `${Math.round(((idx + 1) / questions.length) * 100)}%`;
+      els.slideProgressFill.style.width = `${Math.round(((idx + 1) / pool.length) * 100)}%`;
       const categoryText = categoryLabel(q.category);
       const companyText = q.company && q.company !== categoryText ? ` · ${q.company}` : "";
       els.slideCategory.textContent = `${categoryText}${companyText} · ${q.difficulty}`;
@@ -2812,8 +3937,14 @@
       els.slideMarkGood.classList.toggle("active", progress.masteryLevel === 2);
       els.slideBookmark.classList.toggle("active", Boolean(progress.bookmarked));
       els.slideBookmark.textContent = progress.bookmarked ? "移出错题" : "加入错题";
-      els.slideFooterNote.textContent = `${categoryLabel(q.category)} · ${importance.label}重要性 · ${progress.wrongCount || 0}次不会`;
-      renderSlideTopicNav();
+      els.slideToggleCode.classList.toggle("is-hidden", app.libraryMode !== "coding");
+      els.slideToggleCode.textContent = app.codeVisible ? "隐藏代码" : "显示代码";
+      els.slideHint.textContent = app.libraryMode === "coding"
+        ? "← / → 切换题目，C 显示代码，1 不会，2 模糊，3 掌握"
+        : "← / → 切换题目，1 不会，2 模糊，3 掌握，B 错题";
+      const libraryLabel = app.libraryMode === "coding" ? "手撕代码" : "八股训练";
+      els.slideFooterNote.textContent = `${libraryLabel} · ${importance.label}重要性 · ${progress.wrongCount || 0}次不会`;
+      renderSlideTopicNav(q);
       renderSlideImportanceTrack(trackKey);
     }
 
@@ -2911,6 +4042,8 @@
         markCurrent(1);
       } else if (event.key === "3") {
         markCurrent(2);
+      } else if (event.key.toLowerCase() === "c") {
+        toggleCodeAnswer();
       } else if (event.key.toLowerCase() === "b") {
         toggleBookmark();
       }
@@ -2952,8 +4085,9 @@
     if (typeof window !== "undefined") {
       window.LLM_DRILL_QUESTIONS = questions;
       window.LLM_DRILL_CATEGORIES = CATEGORIES;
+      window.LLM_DRILL_CODE_GROUPS = CODE_GROUPS;
     } else {
-      globalThis.__LLM_DRILL_TEST__ = { questions, CATEGORIES };
+      globalThis.__LLM_DRILL_TEST__ = { questions, CATEGORIES, CODE_GROUPS, theoryQuestions, codingQuestions };
     }
 
     if (typeof document !== "undefined") {
