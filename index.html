@@ -1657,14 +1657,18 @@
         type: "论文", confidence: "高", title: "DeepSeekMath / GRPO",
         urls: [
           { label: "arXiv 2402.03300", url: "https://arxiv.org/abs/2402.03300" },
-          { label: "TRL GRPOTrainer", url: "https://huggingface.co/docs/trl/main/en/grpo_trainer" }
+          { label: "Dr.GRPO arXiv 2503.20783", url: "https://arxiv.org/abs/2503.20783" },
+          { label: "TRL GRPOTrainer", url: "https://huggingface.co/docs/trl/main/grpo_trainer" }
         ],
-        checks: ["GRPO 对同一 prompt 采样 group completions，用组内 reward 相对值估计 advantage。", "GRPO 省掉 value model，降低内存和训练复杂度。", "全 0/全 1 group 会导致 reward std 过低和有效梯度弱。"]
+        checks: ["GRPO 对同一 prompt 采样 group completions，用组内 reward 相对值估计 advantage。", "减去组内均值是在构造 baseline，除以组内标准差是在做 prompt-dependent 梯度缩放，两者作用不同。", "组内标准差归一化能统一 reward 尺度并稳定更新，但会引入 1/std 的问题级重加权，小 group 下还可能放大估计噪声。", "Dr.GRPO 取消组内标准差缩放以缓解 question-level difficulty bias，代价是更新幅度重新依赖原始 reward 尺度。", "TRL 支持 group std、batch std 和不缩放三种策略，batch std 是兼顾全局尺度稳定与避免逐 prompt 重加权的折中。", "GRPO 省掉 value model，降低内存和训练复杂度。"]
       },
       dapo: {
         type: "论文", confidence: "高", title: "DAPO",
-        urls: [{ label: "arXiv 2503.14476", url: "https://arxiv.org/abs/2503.14476" }],
-        checks: ["DAPO 核心是 decoupled clip 和 dynamic sampling，目标是保留有效训练信号。", "长 CoT 场景要关注 token-level loss、overlong filtering、clip-high 和 reward 稀疏。", "动态采样主要处理过易、过难或全同 reward 的 prompt。"]
+        urls: [
+          { label: "arXiv 2503.14476", url: "https://arxiv.org/abs/2503.14476" },
+          { label: "DAPO 官方项目", url: "https://dapo-sia.github.io/" }
+        ],
+        checks: ["DAPO 核心是 decoupled clip 和 dynamic sampling，目标是保留有效训练信号。", "若组内 reward 完全相同，组内方差严格为 0，中心化后的 reward advantage 也严格为 0。", "若目标保留显式 KL 正则，KL 项仍可能产生梯度，因此不能把 reward advantage 为 0 说成整个 loss 必然为 0。", "DAPO 过采样 prompts，再过滤 accuracy 等于 0 或 1 的 groups，以保持每批有效 prompts 数量稳定。", "动态采样提高有效梯度密度，但会增加 rollout 成本，并可能将训练分布推向当前能力边界。", "长 CoT 场景还要关注 token-level loss、overlong reward shaping、clip-high 和 reward 稀疏。"]
       },
       rag: {
         type: "论文", confidence: "高", title: "Retrieval-Augmented Generation",
@@ -1832,13 +1836,13 @@
         ["Process reward vs outcome reward", "process reward 和 outcome reward 的区别是什么？", ["outcome reward只看最终答案，便宜但信用分配弱", "process reward评价中间步骤，能指导推理链，但标注和验证更难", "复杂任务可用过程约束加最终验证，避免模型走对答案但过程不可控"], ["过程奖励会不会鼓励冗长CoT？", "工具调用任务怎么做过程奖励？"], ["把过程奖励等同于展示思维链"], "rlhf", "进阶"],
         ["DPO data quality", "DPO 训练前如何评价数据质量？", ["看偏好对是否真实可区分，chosen和rejected差异是否对应目标能力", "看长度、风格、难度、领域分布和重复样本，避免模型学捷径", "最好用小规模训练、held-out胜率和人工抽检验证"], ["chosen更长会有什么问题？", "偏好数据噪声怎么处理？"], ["只看数据量，不看偏好边际和噪声"], "dpo", "高频追问"],
         ["Preference data construction", "偏好数据怎么构造才适合后训练？", ["先定义目标能力和失败类型，再让多个模型或同模型多采样生成候选", "偏好标注要控制长度、格式、事实性和安全维度", "最后按难度和领域分层，避免只有简单偏好对"], ["pairwise和listwise偏好有什么区别？", "AI标注可不可信？"], ["先生成再随便打分，没有任务定义"], "dpo", "基础"],
-        ["All-zero group", "GRPO 里一个 group 全是 0 或全是 1 会怎样？", ["组内reward方差接近0，相对优势没有有效区分，梯度信号弱", "全0说明任务过难或reward太稀疏，全1说明任务过易", "解决靠动态采样、难度分桶、提高采样数或改reward粒度"], ["为什么DAPO会过滤这类prompt？", "提高group size一定有效吗？"], ["只说加样本，不说难度分布"], "dapo", "高频追问"],
+        ["All-zero group", "GRPO 里一个 group 全是 0 或全是 1，会发生什么，应该怎样处理？", ["若组内reward完全相同，方差严格等于0，减去组内均值后的reward advantage也严格等于0，因此这组rollout不能为相对策略优化提供奖励梯度", "若目标中保留显式KL正则，KL项仍可能贡献梯度，所以不能说整个loss必然为0；全0还要排查任务过难、reward稀疏、答案抽取和verifier错误，全1通常说明任务过易", "DAPO会过采样prompts并过滤accuracy为0或1的groups；也可做难度分桶、增加group size或采样多样性、改进可靠的reward，但要权衡rollout成本、reward hacking和数据分布偏移"], ["为什么DAPO选择过滤，而不是继续训练这类prompt？", "提高group size为什么不一定有效，显式KL此时还有没有梯度？"], ["把方差说成接近0，或把reward advantage为0误说成整个loss必然为0"], "dapo", "高频追问"],
         ["Rollout engine", "后训练系统里 rollout engine 负责什么？", ["它负责批量采样模型响应或轨迹，是RL训练的数据生产环节", "要处理并发、KV cache、采样参数、工具调用环境和reward回传", "用vLLM/SGLang加速rollout能显著影响训练吞吐"], ["verl里rollout和trainer如何协作？", "rollout慢会带来什么瓶颈？"], ["只把rollout理解成生成文本"], "vllm", "进阶"],
         ["On-policy vs off-policy", "LLM RL 里 on-policy 和 off-policy 怎么理解？", ["on-policy用当前策略采样的数据更新当前策略，分布匹配但成本高", "off-policy复用旧数据更省，但策略分布偏移会影响稳定性", "GRPO/PPO通常更偏on-policy，DPO更像离线偏好优化"], ["为什么PPO不能无限复用旧rollout？", "离线RL在LLM里难点是什么？"], ["把所有后训练都叫监督学习"], "rlhf", "基础"],
         ["Temperature in RL", "采样 temperature 对 RL 训练有什么影响？", ["temperature影响探索和候选多样性，太低会导致group同质化，太高会增加低质样本", "对RLVR来说它影响能否采到正确轨迹和reward方差", "通常要结合任务难度、pass@k和训练稳定性调"], ["top-p和temperature怎么一起调？", "训练和评测温度要一样吗？"], ["只说温度越高越随机"], "sampling", "基础"],
         ["Length bias", "后训练为什么容易出现长度偏置？", ["偏好标注和reward model常把长答案误判为更充分", "RL也可能通过更长推理获得更高表面reward", "要用长度归一、明确rubric、overlong penalty和分布监控控制"], ["R1类模型为什么思考长度会变长？", "什么时候长推理是好事？"], ["把长答案一概当坏事"], "rlhf", "高频追问"],
         ["Reference model", "reference model 在 RLHF/DPO 里有什么作用？", ["reference model提供策略锚点，防止模型为追reward偏离原能力和语言分布", "PPO用KL对齐reference，DPO目标里也隐含reference policy", "选择SFT还是base取决于要保留的行为分布"], ["reference冻结吗？", "reference太弱会怎样？"], ["忽略reference导致无法解释KL"], "dpo", "基础"],
-        ["Advantage normalization", "为什么要做 advantage normalization？", ["优势归一化让不同prompt或group的reward尺度更可比", "GRPO里组内标准化是核心，能去掉prompt难度的绝对差异", "风险是方差太小或极端reward导致数值不稳定"], ["组内std为0怎么办？", "normalize会不会改变优化目标？"], ["把归一化当成纯工程细节"], "grpo", "进阶"],
+        ["Advantage normalization", "GRPO 为什么对 advantage 除以组内标准差，Dr.GRPO 为什么取消这一步？", ["GRPO先减去组内reward均值构造相对baseline，再除以组内标准差做whitening，使不同prompt和reward尺度下的更新幅度更可比，也让learning rate与clip更容易控制", "除以标准差不是策略梯度成立的必要条件，它相当于给每个prompt乘上1/std的随机权重，会改变问题间的相对贡献；小group或低方差时还可能放大verifier噪声，这被称为question-level difficulty bias", "Dr.GRPO保留减均值但取消group std缩放，使目标更接近原始expected-reward策略梯度；代价是更新重新依赖reward原始尺度，需要更谨慎地调reward、learning rate和clip", "折中方案是按prompt减均值、再除以全batch共享的std，保留全局尺度稳定性而避免逐prompt重加权；DAPO过滤零方差group，与Dr.GRPO取消std不是同一件事"], ["二值reward下，组内正确率变化会怎样影响正负advantage？", "group std、batch std和不做scaling分别适合什么场景？"], ["把标准差归一化当成无偏且必需的步骤，或误以为DAPO已经取消了group std"], "grpo", "高频追问"],
         ["Clip ratio", "PPO/GRPO 的 clip ratio 怎么解释？", ["clip限制新旧策略概率比，防止单步更新过大", "ratio超过区间时目标函数被截断，稳定性提升但学习速度可能下降", "clip范围要和KL、reward尺度和任务难度一起调"], ["clip太大或太小会怎样？", "DAPO decoupled clip解决什么？"], ["只背公式，不说它约束策略更新"], "dapo", "基础"],
         ["Multi-turn RL", "多轮对话或Agent任务怎么做RL？", ["把一次任务视为trajectory，包含多轮状态、动作、工具调用和观察", "reward可以放在最终成功率，也可以加过程奖励做信用分配", "难点是长horizon、环境不确定、成本和失败归因"], ["credit assignment怎么做？", "多轮任务如何避免只优化最后一句？"], ["把多轮RL当单轮response打分"], "agent", "进阶"],
         ["Tool-use RL", "如何用 RL 优化工具调用？", ["把工具选择、参数生成和是否停止都看成动作", "reward来自工具执行成功、最终答案正确、成本和安全约束", "训练要记录轨迹，并评估任务成功率而不是只看文本相似度"], ["tool router能不能单独训练？", "工具错误会不会污染reward？"], ["只训练function call格式，不评估任务完成"], "agent", "高频追问"],
